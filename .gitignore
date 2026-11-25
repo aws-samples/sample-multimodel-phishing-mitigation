@@ -1,0 +1,33 @@
+# Local scripts — not part of the repo
+prepare_urls.py
+
+# Crawl output — generated on SageMaker, not committed
+html_cache/
+
+# Notebook outputs and checkpoints
+.ipynb_checkpoints/
+*.ipynb_checkpoints
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+dist/
+build/
+.env
+venv/
+.venv/
+
+# Data files generated during training
+html_data/
+data/
+eval_*.csv
+
+# macOS
+.DS_Store
+.claude/
+CLAUDE.md
+
+# Security scan reports — local only
+scan-report*.json
+*.scan.json
