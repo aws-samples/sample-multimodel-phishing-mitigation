@@ -4,6 +4,21 @@ A three-stage ensemble pipeline combining a LightGBM URL classifier, a DistilBER
 
 ## Technical Architecture
 
+![Reference architecture](images/reference-architecture.png)
+
+The diagram shows the full production reference architecture. This sample implements the three-stage detection pipeline (URL classification with LightGBM, HTML classification with DistilBERT on Amazon SageMaker AI, and screenshot analysis with Claude on Amazon Bedrock), the training notebooks, and the Streamlit demo.
+
+These components in the diagram are not included in this sample:
+- Known blocklist check and auto-block of known threats
+- Optional Amazon S3 Vectors lookup for screenshots
+- Amazon ECS decision engine (the sample scores in the notebook and `app.py`)
+- Inference logging with Amazon SQS, AWS Lambda, and Amazon S3 response storage
+- Data pipeline: human review queue, ground truth updates, Amazon Athena lookups and merges, blocklist updates, and data collection
+- Monitoring pipeline: Amazon EventBridge daily scheduler, Lambda drift monitor, Amazon CloudWatch metrics, and Amazon SNS drift alerts
+- Automated retraining pipeline: EventBridge retraining trigger, MLflow experiment tracking and model registry, and automated deployment
+
+The thresholds and Claude trigger condition in the diagram are illustrative. The sample's actual values are set in `app.py` (`HIGH_CONF`, `LOW_CONF`, `VLM_TRIGGER`) and in the first cell of `03_phishing_detection_pipeline.ipynb`, and are described under Decision Engine below.
+
 **Stage 1a — LightGBM URL Classifier**
 - Model: LightGBM gradient-boosted trees
 - Deployment: Amazon SageMaker AI real-time endpoint (`ml.m5.large`)
