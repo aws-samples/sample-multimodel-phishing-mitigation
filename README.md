@@ -28,7 +28,7 @@ The thresholds and Claude trigger condition in the diagram are illustrative. The
 
 **Stage 1b — DistilBERT DOM Classifier**
 - Model: DistilBERT fine-tuned for sequence classification
-- Deployment: Amazon SageMaker AI HuggingFace endpoint (`ml.m5.xlarge`)
+- Deployment: Amazon SageMaker AI HuggingFace endpoint (`ml.g5.xlarge`, GPU, NVIDIA A10G)
 - Input: Structured DOM text (title, forms, inputs, links, visible text), tokenized to 512 tokens
 - Output: P(phishing)
 - Training data: 1,000 synthetic phishing pages (Claude / Amazon Bedrock) + crawled benign pages
@@ -189,18 +189,22 @@ pip install -r requirements.txt
 | Component | Instance | Approx. cost |
 |---|---|---|
 | LightGBM endpoint | ml.m5.large | ~$84/mo |
-| DistilBERT endpoint | ml.m5.xlarge | ~$168/mo |
+| DistilBERT endpoint | ml.g5.xlarge (GPU) | ~$1,028/mo |
 | Amazon Bedrock Claude (VLM) | — | ~$0.0015/call |
 
-**Total endpoint baseline:** ~$252/mo (fixed, regardless of traffic)
+**Total endpoint baseline:** ~$1,112/mo (fixed, regardless of traffic)
 
 | URLs/month | VLM trigger rate | Approx. total/mo |
 |---|---|---|
-| 10,000 | 10% | ~$254 |
-| 100,000 | 10% | ~$267 |
-| 1,000,000 | 5% | ~$327 |
+| 10,000 | 10% | ~$1,113 |
+| 100,000 | 10% | ~$1,127 |
+| 1,000,000 | 5% | ~$1,187 |
 
-For low-volume or bursty workloads, replace real-time endpoints with **SageMaker AI Serverless Inference** to eliminate the fixed cost (cold-start tradeoff of ~1–2 s).
+Prices are on-demand rates in us-east-1 as of November 25, 2026, and may change. See [Amazon SageMaker AI pricing](https://aws.amazon.com/sagemaker/ai/pricing/) for current instance rates and [Amazon Bedrock pricing](https://aws.amazon.com/bedrock/pricing/) for the Claude per-call cost. Monthly figures assume 730 hours.
+
+For lower GPU cost, `ml.g4dn.xlarge` (NVIDIA T4, $0.736/hr as of the same date) also works for DistilBERT. Change the instance type in notebook 02.
+
+For low-volume or bursty workloads, **SageMaker AI Serverless Inference** can remove the fixed cost of the LightGBM endpoint, with a cold-start tradeoff. Serverless Inference does not support GPU instances, so it applies to the DistilBERT endpoint only if you keep it on CPU.
 
 ## Cleanup
 

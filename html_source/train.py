@@ -143,7 +143,7 @@ def main():
         greater_is_better           = True,
         logging_steps               = 50,
         report_to                   = 'none',
-        fp16                        = True,   # G4dn has Tensor Cores
+        fp16                        = True,   # Training job runs on G5 (NVIDIA A10G, Tensor Cores)
     )
 
     trainer = Trainer(
