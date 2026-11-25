@@ -193,6 +193,8 @@ Run the **Cleanup** cell at the bottom of `03_phishing_detection_pipeline.ipynb`
 
 ## Security
 
+See [CONTRIBUTING](CONTRIBUTING.md#security-issue-notifications) for more information.
+
 ### Shared Responsibility
 
 AWS is responsible for security *of* the cloud (physical infrastructure, hypervisor, managed service availability). You are responsible for security *in* the cloud: IAM policies, network controls, encryption at rest and in transit, and the data you store.
